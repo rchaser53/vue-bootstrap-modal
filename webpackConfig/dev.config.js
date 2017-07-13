@@ -8,8 +8,8 @@ module.exports = Object.assign(commonConfig, {
     index: "./entry.js"
   },
   output: {
-    path: path.resolve(__dirname, "lib"),
+    path: path.resolve(__dirname, "../"),
     publicPath: "/public/",
-    filename: "index.js"
+    filename: "bundle.js"
   }
 })

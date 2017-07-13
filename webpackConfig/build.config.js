@@ -7,7 +7,7 @@ module.exports = Object.assign(commonConfig, {
     index: "./index.vue"
   },
   output: {
-    path: path.resolve(__dirname, "lib"),
+    path: path.resolve(__dirname, "../lib"),
     publicPath: "/public/",
     filename: "index.js"
   }
