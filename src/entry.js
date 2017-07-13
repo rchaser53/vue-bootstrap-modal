@@ -3,5 +3,24 @@ import modal from './index.vue'
 
 new Vue({
   el: '#app',
-  template: '<div><modal></modal></div>'
+  data: () => {
+    return {
+      isShown: false
+    }
+  },
+  components: {
+    modal
+  },
+  template: `<div>
+              <button v-on:click='toggleModal'>toggle</button>
+              <modal v-bind:value="isShown" effect="fade">
+                <div>gya-n</div>
+              </modal>
+            </div>`,
+  methods: {
+    // shoud not change this
+    toggleModal: function() {
+      Vue.set(this, 'isShown', !this.isShown)
+    }
+  }
 })
