@@ -1,4 +1,5 @@
 const path = require("path")
+const webpack = require('webpack')
 const commonConfig = require('./common.config.js')
 
 module.exports = Object.assign(commonConfig, {
@@ -10,5 +11,8 @@ module.exports = Object.assign(commonConfig, {
     path: path.resolve(__dirname, "../lib"),
     publicPath: "/public/",
     filename: "index.js"
-  }
+  },
+  plugins: commonConfig.plugins.concat([
+    new webpack.optimize.UglifyJsPlugin()
+  ])
 })
