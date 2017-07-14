@@ -1,5 +1,4 @@
 <template>
-  <!-- <div role="dialog" :class="['modal', effect]" @click="onClose() && action(false, 1)" @transitionend="transition = false"> -->
    <div role="dialog" :class="['modal', effect]" @transitionend="transition = false" @click="closeDialog(['close'])">
     <div class="modal-dialog" role="document" @click.stop="stopEvent()">
       <div class="modal-content">
@@ -64,7 +63,8 @@ function getScrollBarWidth () {
 }
 export default {
   props: {
-    value: {type: Boolean, required: true },
+    modalKey: { type: String },
+    isShown: {type: Boolean, required: true },
     onOk: { type: Function, default: function(){} },
     onClose: { type: Function, default: function(){} },
     cancelText: { type: String, default: 'Close' },
@@ -74,8 +74,7 @@ export default {
   },
   data () {
     return {
-      transition: false,
-      isShown: false
+      transition: false
     }
   },
   watch: {
@@ -118,10 +117,6 @@ export default {
       if (old === null ? isShown === true : isShown !== old) {
         Vue.set(this, 'transition', true)
       }
-    },
-    value (isShown, old) {
-      if (isShown === old) return
-      Vue.set(this, 'isShown', isShown)
     }
   },
   methods: {
@@ -132,13 +127,11 @@ export default {
       keys.forEach((key) => {
         this.$emit(key)
       })
-      Vue.set(this, 'isShown', false)
     }
   },
   mounted () {
-    Vue.set(this, 'isShown', this.value)
-    this.$on('close', this.onClose)
-    this.$on('ok', this.onOk)
+    this.$on('close', this.onClose.bind(this, this.modalKey))
+    this.$on('ok', this.onOk.bind(this, this.modalKey))
   }
 }
 </script>
