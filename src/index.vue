@@ -1,18 +1,19 @@
 <template>
-  <div role="dialog" :class="['modal',effect]" @click="backdrop&&action(false,1)" @transitionend="transition = false">
-    <div :class="['modal-dialog', { 'modal-lg': large, 'modal-sm': small }]" role="document" @click.stop="action(null)">
+  <!-- <div role="dialog" :class="['modal', effect]" @click="onClose() && action(false, 1)" @transitionend="transition = false"> -->
+   <div role="dialog" :class="['modal', effect]" @transitionend="transition = false" @click="closeDialog(['close'])">
+    <div class="modal-dialog" role="document" @click.stop="stopEvent()">
       <div class="modal-content">
         <slot name="modal-header">
           <div class="modal-header">
-            <button type="button" class="close" @click="action(false,2)"><span>&times;</span></button>
+            <button type="button" class="close" @click="closeDialog(['close'])"><span>&times;</span></button>
             <h4 class="modal-title"><slot name="title">{{title}}</slot></h4>
           </div>
         </slot>
         <slot name="modal-body"><div class="modal-body"><slot></slot></div></slot>
         <slot name="modal-footer">
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" @click="action(false,3)">{{ cancelText }}</button>
-            <button type="button" class="btn btn-primary" @click="action(true,4)">{{ okText }}</button>
+            <button type="button" class="btn btn-default" @click="closeDialog(['close'])">{{ cancelText }}</button>
+            <button type="button" class="btn btn-primary" @click="closeDialog(['close', 'ok'])">{{ okText }}</button>
           </div>
         </slot>
       </div>
@@ -63,15 +64,13 @@ function getScrollBarWidth () {
 }
 export default {
   props: {
-    backdrop: {type: Boolean, default: true},
-    callback: {type: Function, default: null},
-    cancelText: {type: String, default: 'Close'},
-    effect: {type: String, default: null},
-    large: {type: Boolean, default: false},
-    okText: {type: String, default: 'Save changes'},
-    small: {type: Boolean, default: false},
-    title: {type: String, default: ''},
-    value: {type: Boolean, required: true}
+    value: {type: Boolean, required: true },
+    onOk: { type: Function, default: function(){} },
+    onClose: { type: Function, default: function(){} },
+    cancelText: { type: String, default: 'Close' },
+    okText: { type: String, default: 'Save changes' },
+    effect: { type: String, default: null },
+    title: { type: String, default: '' },
   },
   data () {
     return {
@@ -90,12 +89,11 @@ export default {
         if (this.isShown) {
           el.querySelector('.modal-content').focus()
           el.style.display = 'block'
+          body.classList.add('modal-open')
 
           setTimeout(() => {
             el.classList.add('in')
           }, 0)
-
-          body.classList.add('modal-open')
 
           if (getScrollBarWidth() === 0) return
           body.style.paddingRight = getScrollBarWidth() + 'px'
@@ -108,7 +106,6 @@ export default {
       else {
         this.$emit(this.isShown ? 'opened' : 'closed')
 
-        // i guess isShown never come null or undefined
         if (!this.isShown) {
           el.style.display = 'none'
           body.style.paddingRight = null
@@ -128,14 +125,20 @@ export default {
     }
   },
   methods: {
-    action (isShown, p) {
-      if (isShown && this.callback instanceof Function) this.callback()
-      this.$emit(isShown ? 'ok' : 'cancel', p)
-      Vue.set(this, 'isShown', isShown || false)
+    stopEvent () {
+      // this function is only for @click.stop
+    },
+    closeDialog(keys) {
+      keys.forEach((key) => {
+        this.$emit(key)
+      })
+      Vue.set(this, 'isShown', false)
     }
   },
   mounted () {
     Vue.set(this, 'isShown', this.value)
+    this.$on('close', this.onClose)
+    this.$on('ok', this.onOk)
   }
 }
 </script>
