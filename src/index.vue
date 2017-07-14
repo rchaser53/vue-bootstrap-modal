@@ -1,6 +1,6 @@
 <template>
   <div role="dialog" :class="['modal',effect]" @click="backdrop&&action(false,1)" @transitionend="transition = false">
-    <div :class="['modal-dialog',{'modal-lg':large,'modal-sm':small}]" role="document" @click.stop="action(null)">
+    <div :class="['modal-dialog', { 'modal-lg': large, 'modal-sm': small }]" role="document" @click.stop="action(null)">
       <div class="modal-content">
         <slot name="modal-header">
           <div class="modal-header">
@@ -21,35 +21,44 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
+const innerStyle = {
+  width: '100%',
+  height: '200px'
+}
+
+const outerStyle = {
+  position: 'absolute',
+  top: '0px',
+  left: '0px',
+  visibility: 'hidden',
+  width: '200px',
+  height: '150px',
+  overflow: 'hidden'
+}
+
 function getScrollBarWidth () {
   const scrollHeight = document.documentElement.scrollHeight
   const clientHeight = document.documentElement.clientHeight
-  console.log(scrollHeight, clientHeight, scrollHeight <= clientHeight)
-  if (scrollHeight <= clientHeight) {
-    return 0
-  }
+
+  if (scrollHeight <= clientHeight) return 0
+
   let inner = document.createElement('p')
-  inner.style = {
-    width: '100%',
-    height: '200px'
-  }
   let outer = document.createElement('div')
-  outer.style = {
-    position: 'absolute',
-    top: '0px',
-    left: '0px',
-    visibility: 'hidden',
-    width: '200px',
-    height: '150px',
-    overflow: 'hidden',
-  }
+  inner.style = innerStyle
+  outer.style = outerStyle;
+
   outer.appendChild(inner)
   document.body.appendChild(outer)
   let w1 = inner.offsetWidth
-  outer.style.overflow = 'scroll'
   let w2 = inner.offsetWidth
+  
+  outer.style.overflow = 'scroll'
   if (w1 === w2) w2 = outer.clientWidth
+
   document.body.removeChild(outer)
+
   return (w1 - w2)
 }
 export default {
@@ -67,73 +76,85 @@ export default {
   data () {
     return {
       transition: false,
-      val: null
+      isShown: false
     }
   },
   watch: {
-    transition (val, old) {
-      if (val === old) { return }
+    transition (isShown, old) {
+      if (isShown === old) return
       const el = this.$el
       const body = document.body
-      if (val) {//starting
-        if (this.val) {
+
+      //starting
+      if (isShown) {
+        if (this.isShown) {
           el.querySelector('.modal-content').focus()
           el.style.display = 'block'
-          setTimeout(() => el.classList.add('in'), 0)
+
+          setTimeout(() => {
+            el.classList.add('in')
+          }, 0)
+
           body.classList.add('modal-open')
-          if (getScrollBarWidth() !== 0) {
-            body.style.paddingRight = getScrollBarWidth() + 'px'
-          }
+
+          if (getScrollBarWidth() === 0) return
+          body.style.paddingRight = getScrollBarWidth() + 'px'
+
         } else {
           el.classList.remove('in')
         }
-      } else {//ending
-        this.$emit(this.val ? 'opened' : 'closed')
-        // i guess val never come null or undefined
-        if (!this.val) {
+      }
+      //ending
+      else {
+        this.$emit(this.isShown ? 'opened' : 'closed')
+
+        // i guess isShown never come null or undefined
+        if (!this.isShown) {
           el.style.display = 'none'
           body.style.paddingRight = null
           body.classList.remove('modal-open')
         }
       }
     },
-    val (val, old) {
-      this.$emit('input', val)
-      if (old === null ? val === true : val !== old) this.transition = true
+    isShown (isShown, old) {
+      this.$emit('input', isShown)
+      if (old === null ? isShown === true : isShown !== old) {
+        Vue.set(this, 'transition', true)
+      }
     },
-    value (val, old) {
-      if (val !== old) this.val = val
+    value (isShown, old) {
+      if (isShown === old) return
+      Vue.set(this, 'isShown', isShown)
     }
   },
   methods: {
-    action (val,p) {
-      if (val === null) { return }
-      if (val && this.callback instanceof Function) this.callback()
-      this.$emit(val ? 'ok' : 'cancel',p)
-      this.val = val || false
+    action (isShown, p) {
+      if (isShown && this.callback instanceof Function) this.callback()
+      this.$emit(isShown ? 'ok' : 'cancel', p)
+      Vue.set(this, 'isShown', isShown || false)
     }
   },
   mounted () {
-    this.val = this.value
+    Vue.set(this, 'isShown', this.value)
   }
 }
 </script>
 <style>
-.modal {
-  transition: all 0.3s ease;
-}
-.modal.in {
-  background-color: rgba(0,0,0,0.5);
-}
-.modal.zoom .modal-dialog {
-  transform: scale(0.1);
-  top: 300px;
-  opacity: 0;
-  transition: all 0.3s;
-}
-.modal.zoom.in .modal-dialog {
-  transform: scale(1);
-  transform: translate3d(0, -300px, 0);
-  opacity: 1;
-}
+  .modal {
+    transition: all 0.3s ease;
+  }
+  .modal.in {
+    background-color: rgba(0,0,0,0.5);
+  }
+  .modal.zoom .modal-dialog {
+    transform: scale(0.1);
+    top: 300px;
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .modal.zoom.in .modal-dialog {
+    transform: scale(1);
+    transform: translate3d(0, -300px, 0);
+    opacity: 1;
+  }
 </style>
