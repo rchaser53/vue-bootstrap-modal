@@ -1,5 +1,5 @@
 {
-  "name": "vue-bootstrap-modal",
+  "name": "vue-modal-bootstrap",
   "version": "0.0.1",
   "description": "",
   "directories": {
@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rchaser53/vue-bootstrap-modal.git"
+    "url": "git+https://github.com/rchaser53/vue-modal-bootstrap.git"
   },
   "author": "rchaser53",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rchaser53/vue-bootstrap-modal/issues"
+    "url": "https://github.com/rchaser53/vue-modal-bootstrap/issues"
   },
   "devDependencies": {
     "ava": "^0.20.0",
@@ -34,5 +34,5 @@
     "webpack": "^3.2.0",
     "webpack-dev-server": "^2.5.1"
   },
-  "homepage": "https://github.com/rchaser53/vue-bootstrap-modal#readme"
+  "homepage": "https://github.com/rchaser53/vue-modal-bootstrap#readme"
 }

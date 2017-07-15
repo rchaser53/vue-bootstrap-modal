@@ -1,1 +1,1 @@
-# vue-bootstrap-modal
+# vue-modal-bootstrap
