@@ -2,3 +2,5 @@ src
 index.html
 test
 example
+webpackConfig
+.babelrc
