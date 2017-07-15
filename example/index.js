@@ -1,24 +1,24 @@
-import Vue from 'vue'
-import modal from '../src/index.vue'
+const Vue = require('vue')
+const modalA = require('./modals/modalA')
+const modalB = require('./modals/modalB')
 
 new Vue({
   el: '#app',
-  data() {
-    return {
-      isShowns: {
-        modalA: false
-      }
+  components: {
+    modalA,
+    modalB
+  },
+  data: {
+    isShowns: {
+      modalA: false,
+      modalB: false
     }
   },
-  components: {
-    modal
-  },
   template: `<div>
-              <button v-on:click='toggleModal("modalA")'>toggle</button>
-              <modal v-bind:isShown="isShowns.modalA" effect="fade"
-                    v-bind:modalKey="'modalA'" v-bind:onOk="onClose" v-bind:onClose="onClose">
-                <div>gya-n</div>
-              </modal>
+              <button v-on:click='toggleModal("modalA")'>modalA</button>
+              <button v-on:click='toggleModal("modalB")'>modalB</button>
+              <modalA modalKey='modalA' v-bind:onClose='onClose' v-bind:isShown='isShowns.modalA' />
+              <modalB modalKey='modalB' v-bind:onClose='onClose' v-bind:isShown='isShowns.modalB' />
             </div>`,
   methods: {
     toggleModal(key) {
