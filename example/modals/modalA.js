@@ -1,5 +1,5 @@
 const Vue = require('vue')
-const modal = require('../../src/index.vue').default
+const modal = require('../../src/index')
 
 module.exports = Vue.extend({
   components: {
