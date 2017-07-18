@@ -9,7 +9,6 @@ module.exports = Object.assign(commonConfig, {
   },
   output: {
     path: path.resolve(__dirname, "../lib"),
-    publicPath: "/public/",
     filename: "index.js",
     libraryTarget: 'umd'
   },
