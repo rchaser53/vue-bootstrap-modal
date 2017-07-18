@@ -103,8 +103,6 @@ export default {
       }
       //ending
       else {
-        this.$emit(this.isShown ? 'opened' : 'closed')
-
         if (!this.isShown) {
           el.style.display = 'none'
           body.style.paddingRight = null
@@ -113,7 +111,6 @@ export default {
       }
     },
     isShown (isShown, old) {
-      this.$emit('input', isShown)
       if (old === null ? isShown === true : isShown !== old) {
         Vue.set(this, 'transition', true)
       }
