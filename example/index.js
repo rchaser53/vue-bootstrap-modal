@@ -17,8 +17,8 @@ new Vue({
   template: `<div>
               <button v-on:click='toggleModal("modalA")'>modalA</button>
               <button v-on:click='toggleModal("modalB")'>modalB</button>
-              <modalA modal-key='modalA' v-bind:on-close='onClose' v-bind:is-shown='isShowns.modalA' />
-              <modalB modal-key='modalB' v-bind:on-close='onClose' v-bind:is-shown='isShowns.modalB' />
+              <modal-a modal-key='modalA' v-bind:on-close='onClose' v-bind:is-shown='isShowns.modalA' ></modal-a>
+              <modal-b modal-key='modalB' v-bind:on-close='onClose' v-bind:is-shown='isShowns.modalB' ></modal-b>
             </div>`,
   methods: {
     toggleModal(key) {
