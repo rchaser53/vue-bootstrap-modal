@@ -126,7 +126,7 @@ export default {
       })
     }
   },
-  mounted () {
+  ready: function() {
     this.$on('closed', this.onClosed.bind(this, this.modalKey))
     this.$on('oked', this.onOked.bind(this, this.modalKey))
   }
