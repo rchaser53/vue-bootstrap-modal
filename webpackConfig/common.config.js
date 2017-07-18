@@ -8,12 +8,12 @@ module.exports = {
     rules:[{
       test: /\.vue$/,
       loaders: [
-        'babel-loader',
         'vue-loader'
       ]
     }, {
       test: /\.js$/,
-      loader: 'babel-loader'
+      loader: 'babel-loader',
+      exclude: /node_modules|vue\/src|vue-router\/|vue-loader\/|vue-hot-reload-api\//
     }
   ]
   },
