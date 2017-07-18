@@ -1,18 +1,18 @@
 <template>
-   <div role="dialog" :class="['modal', effect]" @transitionend="transition = false" @click="closeDialog(['close'])">
+   <div role="dialog" :class="['modal', effect]" @transitionend="transition = false" @click="closeDialog(['closed'])">
     <div class="modal-dialog" role="document" @click.stop="stopEvent()">
       <div class="modal-content">
         <slot name="modal-header">
           <div class="modal-header">
-            <button type="button" class="close" @click="closeDialog(['close'])"><span>&times;</span></button>
+            <button type="button" class="close" @click="closeDialog(['closed'])"><span>&times;</span></button>
             <h4 class="modal-title"><slot name="title">{{title}}</slot></h4>
           </div>
         </slot>
         <slot name="modal-body"><div class="modal-body"><slot></slot></div></slot>
         <slot name="modal-footer">
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" @click="closeDialog(['close'])">{{ cancelText }}</button>
-            <button type="button" class="btn btn-primary" @click="closeDialog(['close', 'ok'])">{{ okText }}</button>
+            <button type="button" class="btn btn-default" @click="closeDialog(['closed'])">{{ cancelText }}</button>
+            <button type="button" class="btn btn-primary" @click="closeDialog(['closed', 'oked'])">{{ okText }}</button>
           </div>
         </slot>
       </div>
@@ -63,12 +63,12 @@ function getScrollBarWidth () {
 }
 export default {
   props: {
-    modalKey: { type: String },
-    isShown: {type: Boolean, required: true },
-    onOk: { type: Function, default: function(){} },
-    onClose: { type: Function, default: function(){} },
-    cancelText: { type: String, default: 'Close' },
-    okText: { type: String, default: 'Save changes' },
+    'modal-key': { type: String },
+    'on-oked': { type: Function, default: function(){} },
+    'on-closed': { type: Function, default: function(){} },
+    'cancel-text': { type: String, default: 'Close' },
+    'ok-text': { type: String, default: 'Save changes' },
+    shown: {type: Boolean, required: true },
     effect: { type: String, default: null },
     title: { type: String, default: '' },
   },
@@ -78,14 +78,14 @@ export default {
     }
   },
   watch: {
-    transition (isShown, old) {
-      if (isShown === old) return
+    transition (shown, old) {
+      if (shown === old) return
       const el = this.$el
       const body = document.body
 
       //starting
-      if (isShown) {
-        if (this.isShown) {
+      if (shown) {
+        if (this.shown) {
           el.querySelector('.modal-content').focus()
           el.style.display = 'block'
           body.classList.add('modal-open')
@@ -103,15 +103,15 @@ export default {
       }
       //ending
       else {
-        if (!this.isShown) {
+        if (!this.shown) {
           el.style.display = 'none'
           body.style.paddingRight = null
           body.classList.remove('modal-open')
         }
       }
     },
-    isShown (isShown, old) {
-      if (old === null ? isShown === true : isShown !== old) {
+    shown (shown, old) {
+      if (old === null ? shown === true : shown !== old) {
         Vue.set(this, 'transition', true)
       }
     }
@@ -127,8 +127,8 @@ export default {
     }
   },
   mounted () {
-    this.$on('close', this.onClose.bind(this, this.modalKey))
-    this.$on('ok', this.onOk.bind(this, this.modalKey))
+    this.$on('closed', this.onClosed.bind(this, this.modalKey))
+    this.$on('oked', this.onOked.bind(this, this.modalKey))
   }
 }
 </script>
