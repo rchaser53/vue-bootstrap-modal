@@ -1,7 +1,7 @@
 const Vue = require('vue')
 const modal = require('../../src/index')
 
-module.exports = Vue.extend({
+const modalA = Vue.extend({
   components: {
     modal
   },
@@ -21,3 +21,6 @@ module.exports = Vue.extend({
     }
   }
 })
+
+Vue.component('modal-a', modalA)
+module.exports = modalA
